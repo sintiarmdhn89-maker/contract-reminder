@@ -1,0 +1,1293 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Contract Reminder Entry</title>
+
+<style>
+
+/* =========================
+   RESET
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:15px;
+    font-family:Arial,sans-serif;
+    background:#f4f6f9;
+    color:#333;
+}
+
+.container{
+    width:100%;
+    max-width:1100px;
+    margin:auto;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#0066cc;
+    color:white;
+    padding:18px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+
+.header h1{
+    margin:0;
+    font-size:24px;
+}
+
+/* =========================
+   FORM CARD
+========================= */
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:16px;
+    font-family:Arial,sans-serif;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#0066cc;
+    outline:none;
+}
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+    font-size:12px;
+    color:#666;
+    margin-top:5px;
+}
+
+/* =========================
+   REMINDER DAYS
+========================= */
+
+.reminder-box{
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:12px;
+}
+
+.reminder-items{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
+    gap:12px;
+}
+
+.reminder-items label{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-weight:normal;
+    margin:0;
+}
+
+.reminder-items input{
+    width:auto;
+    margin:0;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.action-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:20px;
+}
+
+button{
+    padding:12px 22px;
+    border:none;
+    border-radius:7px;
+    color:white;
+    cursor:pointer;
+    min-height:48px;
+    font-size:16px;
+    transition:.2s;
+}
+
+button:hover{
+    opacity:.88;
+    transform:translateY(-1px);
+}
+
+button:active{
+    transform:scale(.98);
+}
+
+.save{
+    background:#0066cc;
+}
+
+.update{
+    background:#28a745;
+}
+
+.clear{
+    background:#ff9800;
+}
+
+.search{
+    background:#17a2b8;
+}
+
+.export{
+    background:#6f42c1;
+}
+
+.exit{
+    background:#dc3545;
+}
+
+/* =========================
+   FILE ATTACHMENT
+========================= */
+
+#attachment2,
+#attachment3{
+    display:none;
+}
+
+/* =========================
+   TABLE DESKTOP
+========================= */
+
+.grid-container{
+    margin-top:20px;
+    width:100%;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:750px;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#0066cc;
+    color:white;
+    font-weight:bold;
+}
+
+th,td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+    overflow-wrap:anywhere;
+}
+
+tbody tr{
+    cursor:pointer;
+}
+
+tbody tr:hover{
+    background:#edf5ff;
+}
+
+tbody tr.selected-row{
+    background:#dceeff;
+    outline:2px solid #0066cc;
+}
+
+.status-active{
+    color:green;
+    font-weight:bold;
+}
+
+/* =========================
+   RESPONSIVE TABLE HP
+========================= */
+
+@media(max-width:767px){
+
+    body{
+        padding:10px;
+    }
+
+    .container{
+        width:100%;
+    }
+
+    .header{
+        padding:15px;
+    }
+
+    .header h1{
+        font-size:20px;
+    }
+
+    .card{
+        padding:15px;
+    }
+
+    input,
+    textarea,
+    select{
+        font-size:16px;
+    }
+
+    /* BUTTON FULL WIDTH */
+
+    .action-buttons{
+        flex-direction:column;
+    }
+
+    button{
+        width:100%;
+    }
+
+    /* REMINDER GRID */
+
+    .reminder-items{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    /* TABLE MENJADI CARD */
+
+    .grid-container{
+        overflow-x:visible;
+        width:100%;
+    }
+
+    table{
+        width:100%;
+        min-width:100%;
+        border-collapse:separate;
+        border-spacing:0 12px;
+    }
+
+    thead{
+        display:none;
+    }
+
+    tbody tr{
+        display:block;
+        background:white;
+        border-radius:10px;
+        box-shadow:0 2px 8px rgba(0,0,0,.10);
+        margin-bottom:15px;
+        overflow:hidden;
+    }
+
+    tbody td{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:12px;
+        width:100%;
+        padding:12px;
+        border:none;
+        border-bottom:1px solid #eee;
+        font-size:14px;
+    }
+
+    tbody td::before{
+        content:attr(data-label);
+        font-weight:bold;
+        color:#0066cc;
+        flex:0 0 40%;
+    }
+
+    tbody td:last-child{
+        border-bottom:none;
+    }
+
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media(min-width:768px) and (max-width:1024px){
+
+    .header h1{
+        font-size:22px;
+    }
+
+    .card{
+        padding:18px;
+    }
+
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media(min-width:1025px){
+
+    .header h1{
+        font-size:24px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+        <h1>Contract Reminder Entry</h1>
+    </div>
+
+
+    <!-- FORM CARD -->
+
+    <div class="card">
+
+        <!-- DOCUMENT NAME -->
+
+        <div class="form-group">
+
+            <label>Document Name</label>
+
+            <input
+                type="text"
+                id="documentName"
+                placeholder="Enter document name">
+
+        </div>
+
+
+        <!-- SUBJECT -->
+
+        <div class="form-group">
+
+            <label>Subject</label>
+
+            <input
+                type="text"
+                id="subject"
+                placeholder="Enter subject">
+
+        </div>
+
+
+        <!-- DETAIL -->
+
+        <div class="form-group">
+
+            <label>Detail</label>
+
+            <textarea
+                id="detail"
+                placeholder="Enter document details"></textarea>
+
+        </div>
+
+
+        <!-- CC NAME -->
+
+        <div class="form-group">
+
+            <label>CC Name</label>
+
+            <input
+                type="text"
+                id="ccName"
+                placeholder="Enter CC name">
+
+        </div>
+
+
+        <!-- CC EMAIL -->
+
+        <div class="form-group">
+
+            <label>CC Email</label>
+
+            <input
+                type="text"
+                id="ccEmail"
+                placeholder="user1@email.com,user2@email.com">
+
+            <div class="note">
+                Pisahkan beberapa email dengan koma (,)
+            </div>
+
+        </div>
+
+
+        <!-- START DATE -->
+
+        <div class="form-group">
+
+            <label>Start Date</label>
+
+            <input
+                type="date"
+                id="startDate">
+
+        </div>
+
+
+        <!-- END DATE -->
+
+        <div class="form-group">
+
+            <label>End Date</label>
+
+            <input
+                type="date"
+                id="endDate">
+
+        </div>
+
+
+        <!-- DOCUMENT TYPE -->
+
+        <div class="form-group">
+
+            <label>Document Type</label>
+
+            <select id="docType">
+
+                <option value="Contract Expired">Contract Expired</option>
+                <option value="Annual">Annual</option>
+                <option value="Semester">Semester</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Monthly">Monthly</option>
+
+            </select>
+
+        </div>
+
+
+        <!-- REMINDER DAYS -->
+
+        <div class="form-group">
+
+            <label>Reminder Days</label>
+
+            <div class="reminder-box">
+
+                <div class="reminder-items">
+
+                    <label><input type="checkbox" value="H-90" checked> H-90</label>
+
+                    <label><input type="checkbox" value="H-60" checked> H-60</label>
+
+                    <label><input type="checkbox" value="H-30" checked> H-30</label>
+
+                    <label><input type="checkbox" value="H-14" checked> H-14</label>
+
+                    <label><input type="checkbox" value="H-7" checked> H-7</label>
+
+                    <label><input type="checkbox" value="H-5" checked> H-5</label>
+
+                    <label><input type="checkbox" value="H-3" checked> H-3</label>
+
+                    <label><input type="checkbox" value="H-2" checked> H-2</label>
+
+                    <label><input type="checkbox" value="H-1" checked> H-1</label>
+
+                    <label><input type="checkbox" value="Hari H" checked> Hari H</label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="form-group">
+
+            <label>Status</label>
+
+            <select id="status">
+
+                <option value="Active">Active</option>
+                <option value="Cancel">Cancel</option>
+                <option value="Close">Close</option>
+                <option value="Done">Done</option>
+
+            </select>
+
+        </div>
+
+
+        <!-- MAIN DOCUMENT -->
+
+        <div class="form-group">
+
+            <label>Main Document</label>
+
+            <input
+                type="file"
+                id="attachment1">
+
+        </div>
+
+
+        <!-- SUPPORTING DOCUMENT -->
+
+        <div class="form-group" id="attachment2">
+
+            <label>Supporting Document</label>
+
+            <input type="file" id="supportingFile">
+
+        </div>
+
+
+        <!-- ADDITIONAL DOCUMENT -->
+
+        <div class="form-group" id="attachment3">
+
+            <label>Additional Document</label>
+
+            <input type="file" id="additionalFile">
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="action-buttons">
+
+            <button type="button" class="save">
+                Save
+            </button>
+
+            <button type="button" class="update">
+                Update
+            </button>
+
+            <button type="button" class="clear" id="btnClear">
+                Clear
+            </button>
+
+            <button type="button" class="search">
+                Search
+            </button>
+
+            <button type="button" class="export">
+                Export Excel
+            </button>
+
+            <button type="button" class="exit">
+                Exit
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="grid-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>No</th>
+                    <th>Document</th>
+                    <th>Subject</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Type</th>
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="gridData">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+/* STORAGE */
+
+const STORAGE_KEY = "contractReminderData";
+
+let contractData = [];
+
+let selectedId = null;
+
+try{
+
+    contractData = JSON.parse(
+        localStorage.getItem(STORAGE_KEY) || "[]"
+    );
+
+    if(!Array.isArray(contractData)){
+        contractData = [];
+    }
+
+}catch(error){
+
+    contractData = [];
+
+}
+
+
+/* SAVE TO STORAGE */
+
+function saveToStorage(){
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(contractData)
+    );
+
+}
+
+
+/* GET FORM DATA */
+
+function getFormData(){
+
+    return {
+
+        documentName:
+            document.getElementById("documentName").value.trim(),
+
+        subject:
+            document.getElementById("subject").value.trim(),
+
+        detail:
+            document.getElementById("detail").value.trim(),
+
+        ccName:
+            document.getElementById("ccName").value.trim(),
+
+        ccEmail:
+            document.getElementById("ccEmail").value.trim(),
+
+        startDate:
+            document.getElementById("startDate").value,
+
+        endDate:
+            document.getElementById("endDate").value,
+
+        docType:
+            document.getElementById("docType").value,
+
+        status:
+            document.getElementById("status").value,
+
+        reminders:
+            Array.from(
+                document.querySelectorAll(
+                    ".reminder-items input:checked"
+                )
+            ).map(function(item){
+                return item.value;
+            })
+
+    };
+
+}
+
+
+/* VALIDATION */
+
+function validateData(data){
+
+    if(
+        !data.documentName ||
+        !data.subject ||
+        !data.startDate ||
+        !data.endDate
+    ){
+
+        alert(
+            "Mohon lengkapi Document Name, Subject, Start Date, dan End Date!"
+        );
+
+        return false;
+
+    }
+
+    if(data.endDate < data.startDate){
+
+        alert(
+            "End Date tidak boleh lebih awal dari Start Date!"
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+/* GET FILE NAMES */
+
+function getFileNames(oldData = {}){
+
+    return {
+
+        mainFile:
+            document.getElementById("attachment1").files[0]?.name
+            || oldData.mainFile || "",
+
+        supportingFile:
+            document.getElementById("supportingFile").files[0]?.name
+            || oldData.supportingFile || "",
+
+        additionalFile:
+            document.getElementById("additionalFile").files[0]?.name
+            || oldData.additionalFile || ""
+
+    };
+
+}
+
+
+/* RENDER TABLE */
+
+function renderTable(dataToShow = contractData){
+
+    const gridData = document.getElementById("gridData");
+
+    gridData.innerHTML = "";
+
+    if(dataToShow.length === 0){
+
+        const row = document.createElement("tr");
+
+        const cell = document.createElement("td");
+
+        cell.colSpan = 7;
+        cell.textContent = "No contract data available.";
+        cell.style.textAlign = "center";
+
+        row.appendChild(cell);
+
+        gridData.appendChild(row);
+
+        return;
+
+    }
+
+    dataToShow.forEach(function(data){
+
+        const index = contractData.findIndex(
+            item => item.id === data.id
+        );
+
+        const row = document.createElement("tr");
+
+        if(data.id === selectedId){
+            row.classList.add("selected-row");
+        }
+
+        const values = [
+
+            ["No", index + 1],
+            ["Document", data.documentName],
+            ["Subject", data.subject],
+            ["Start Date", data.startDate],
+            ["End Date", data.endDate],
+            ["Type", data.docType],
+            ["Status", data.status]
+
+        ];
+
+        values.forEach(function(item){
+
+            const td = document.createElement("td");
+
+            td.setAttribute("data-label", item[0]);
+
+            td.textContent = item[1] ?? "";
+
+            if(
+                item[0] === "Status" &&
+                item[1] === "Active"
+            ){
+                td.classList.add("status-active");
+            }
+
+            row.appendChild(td);
+
+        });
+
+        row.addEventListener("click", function(){
+
+            selectedId = data.id;
+
+            renderTable();
+
+            fillForm(data);
+
+        });
+
+        gridData.appendChild(row);
+
+    });
+
+}
+
+
+/* FILL FORM */
+
+function fillForm(data){
+
+    document.getElementById("documentName").value =
+        data.documentName || "";
+
+    document.getElementById("subject").value =
+        data.subject || "";
+
+    document.getElementById("detail").value =
+        data.detail || "";
+
+    document.getElementById("ccName").value =
+        data.ccName || "";
+
+    document.getElementById("ccEmail").value =
+        data.ccEmail || "";
+
+    document.getElementById("startDate").value =
+        data.startDate || "";
+
+    document.getElementById("endDate").value =
+        data.endDate || "";
+
+    document.getElementById("docType").value =
+        data.docType || "Contract Expired";
+
+    document.getElementById("status").value =
+        data.status || "Active";
+
+    document.querySelectorAll(
+        ".reminder-items input"
+    ).forEach(function(item){
+
+        item.checked = (data.reminders || []).includes(item.value);
+
+    });
+
+    document.getElementById("attachment2").style.display =
+        data.mainFile ? "block" : "none";
+
+    document.getElementById("attachment3").style.display =
+        data.supportingFile ? "block" : "none";
+
+}
+
+
+/* SAVE BUTTON */
+
+document.querySelector(".save").addEventListener("click", function(){
+
+    const data = getFormData();
+
+    if(!validateData(data)){
+        return;
+    }
+
+    data.id = Date.now();
+
+    Object.assign(data, getFileNames());
+
+    contractData.push(data);
+
+    try{
+
+        saveToStorage();
+
+    }catch(error){
+
+        contractData.pop();
+
+        alert("Gagal menyimpan data. Penyimpanan browser mungkin penuh.");
+
+        return;
+
+    }
+
+    selectedId = null;
+
+    renderTable();
+
+    clearForm();
+
+    alert("Data kontrak berhasil disimpan!");
+
+});
+
+
+/* UPDATE BUTTON */
+
+document.querySelector(".update").addEventListener("click", function(){
+
+    if(selectedId === null){
+
+        alert("Silakan pilih data pada tabel yang ingin diperbarui!");
+
+        return;
+
+    }
+
+    const data = getFormData();
+
+    if(!validateData(data)){
+        return;
+    }
+
+    const index = contractData.findIndex(function(item){
+
+        return item.id === selectedId;
+
+    });
+
+    if(index === -1){
+
+        alert("Data tidak ditemukan!");
+
+        return;
+
+    }
+
+    const oldData = contractData[index];
+
+    data.id = oldData.id;
+
+    Object.assign(data, getFileNames(oldData));
+
+    contractData[index] = data;
+
+    try{
+
+        saveToStorage();
+
+    }catch(error){
+
+        contractData[index] = oldData;
+
+        alert("Gagal memperbarui data!");
+
+        return;
+
+    }
+
+    selectedId = null;
+
+    renderTable();
+
+    clearForm();
+
+    alert("Data kontrak berhasil diperbarui!");
+
+});
+
+
+/* CLEAR FORM */
+
+function clearForm(){
+
+    document.querySelectorAll(
+        'input[type="text"], input[type="date"], textarea'
+    ).forEach(function(item){
+
+        item.value = "";
+
+    });
+
+    document.querySelectorAll(
+        'input[type="file"]'
+    ).forEach(function(item){
+
+        item.value = "";
+
+    });
+
+    document.querySelectorAll(
+        ".reminder-items input"
+    ).forEach(function(item){
+
+        item.checked = true;
+
+    });
+
+    document.getElementById("docType").selectedIndex = 0;
+
+    document.getElementById("status").selectedIndex = 0;
+
+    document.getElementById("attachment2").style.display = "none";
+
+    document.getElementById("attachment3").style.display = "none";
+
+    selectedId = null;
+
+    renderTable();
+
+}
+
+
+/* CLEAR BUTTON */
+
+document.getElementById("btnClear").addEventListener("click", function(){
+
+    clearForm();
+
+});
+
+
+/* ATTACHMENT 1 */
+
+document.getElementById("attachment1").addEventListener(
+    "change",
+    function(){
+
+        if(this.files.length > 0){
+
+            document.getElementById("attachment2").style.display = "block";
+
+        }
+
+    }
+);
+
+
+/* ATTACHMENT 2 */
+
+document.getElementById("supportingFile").addEventListener(
+    "change",
+    function(){
+
+        if(this.files.length > 0){
+
+            document.getElementById("attachment3").style.display = "block";
+
+        }
+
+    }
+);
+
+
+/* SEARCH BUTTON */
+
+document.querySelector(".search").addEventListener("click", function(){
+
+    const keyword = prompt(
+        "Masukkan nama dokumen atau subject yang ingin dicari:"
+    );
+
+    if(keyword === null){
+        return;
+    }
+
+    const searchText = keyword.trim().toLowerCase();
+
+    if(searchText === ""){
+
+        renderTable();
+
+        return;
+
+    }
+
+    const results = contractData.filter(function(data){
+
+        return (
+            (data.documentName || "").toLowerCase().includes(searchText) ||
+            (data.subject || "").toLowerCase().includes(searchText)
+        );
+
+    });
+
+    renderTable(results);
+
+    if(results.length === 0){
+
+        alert("Data kontrak tidak ditemukan!");
+
+    }
+
+});
+
+
+/* EXPORT EXCEL - CSV */
+
+document.querySelector(".export").addEventListener("click", function(){
+
+    if(contractData.length === 0){
+
+        alert("Belum ada data untuk diekspor!");
+
+        return;
+
+    }
+
+    const headers = [
+        "No",
+        "Document",
+        "Subject",
+        "Detail",
+        "CC Name",
+        "CC Email",
+        "Start Date",
+        "End Date",
+        "Type",
+        "Status",
+        "Reminder Days",
+        "Main Document",
+        "Supporting Document",
+        "Additional Document"
+    ];
+
+    const rows = contractData.map(function(data, index){
+
+        return [
+            index + 1,
+            data.documentName,
+            data.subject,
+            data.detail,
+            data.ccName,
+            data.ccEmail,
+            data.startDate,
+            data.endDate,
+            data.docType,
+            data.status,
+            (data.reminders || []).join(", "),
+            data.mainFile,
+            data.supportingFile,
+            data.additionalFile
+        ];
+
+    });
+
+    function csvEscape(value){
+
+        return '"' + String(value ?? "").replace(/"/g, '""') + '"';
+
+    }
+
+    const csvContent = [
+        headers,
+        ...rows
+    ].map(function(row){
+
+        return row.map(csvEscape).join(",");
+
+    }).join("\r\n");
+
+    const blob = new Blob(
+        ["\uFEFF" + csvContent],
+        {type:"text/csv;charset=utf-8;"}
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "Contract_Reminder_Data.csv";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    URL.revokeObjectURL(url);
+
+    alert("Data berhasil diekspor!");
+
+});
+
+
+/* EXIT BUTTON */
+
+document.querySelector(".exit").addEventListener("click", function(){
+
+    const confirmExit = confirm(
+        "Apakah kamu yakin ingin keluar dari aplikasi?"
+    );
+
+    if(confirmExit){
+
+        window.close();
+
+    }
+
+});
+
+
+/* INITIAL LOAD */
+
+renderTable();
+
+</script>
+
+</body>
+</html>
